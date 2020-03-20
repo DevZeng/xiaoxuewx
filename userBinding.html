@@ -1,0 +1,362 @@
+<!-- <!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="divport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>用户绑定</title>
+     <style>
+      html,body{
+        background-color: #fff;
+      }
+      header{  
+        line-height: 42px; 
+        font-size: 18px; 
+        text-align: center; 
+      }
+
+      button {
+        width: 60vw;
+        height: 9.33vw;
+        line-height: 9.33vw;
+        margin: 13.33vw 20vw 6.66vw 20vw;
+        color: #fff;
+        background-color: #2a9f93;
+        border-radius: 6.66vw;
+        font-size: 4.66vw;
+      }
+
+      button::after {
+        border: none;
+      }
+
+
+      .list {
+        padding: 0 0 5.33vw 5.33vw;
+        background-color: #fff;
+      }
+
+      .tabledivcell {
+        width:90vw;
+        position: relative;
+        padding: 3.33vw 5.33vw 3.33vw 0;
+        border-bottom: 0.26vw solid #dcdcdc;
+        background-color: #fff;
+        color: #666;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 4.66vw;
+      }
+
+      .tabledivcell .box2 {
+        width: 49.33vw;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-start;
+      }
+
+      .tabledivcell span {
+        width: 53.33vw;
+        font-size: 4.26vw;
+        margin-left: 1.53vw;
+        white-space : nowrap;
+      }
+
+      .tabledivcell .input {
+        display: block;
+        width: 53.33vw;
+        height: 6.66vw;
+        line-height: 6.66vw;
+        font-size: 4vw;
+        text-align: right;
+        border:none;
+      }
+
+      .tabledivcell .left-icon {
+        width: 5.33vw;
+        min-width:5.33vw;
+        height: 5.33vw;
+        min-height:5.33vw;
+        object-fit: cover;
+      }
+      .explain{
+        margin:1vw 0;
+        font-size: 3.33vw;
+        color: #aaa;
+      }
+
+      </style>
+    </head>
+    <body>
+      <div id="wrap">
+
+        <div class="list">
+          
+          <div class="tabledivcell">
+            <img class="left-icon" src="./icon/ID.png" />
+            <span>身份证号</span>
+            <input class="input" placeholder="请输入身份证号码" v-model="user_card" :value="user_card"></input>
+          </div>
+          <div class="explain">注：请输入您在“图巴诺校园安全”小程序内填写的身份证号码。</div>
+          
+
+        </div>
+          <button @click='submit'>立即绑定</button>
+      </div>
+    </body>
+  </html>
+
+<script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+<script type="text/javascript" src="js/vue.min.js"></script>
+<script type="text/javascript">
+var httpUrl = 'https://faceschool.geckowing.com/'
+var wrap = new Vue({
+        el:'#wrap',
+        data:{
+            user_card:''
+        },
+        //用于数据初始化
+        created:function(){
+
+        },
+        methods: {
+          // //提交申请
+          submit: function() {
+            console.log(this.user_card)
+            let that = this
+            if(this.user_card){
+              let data ={
+                public_openid:sessionStorage.getItem('openId'),
+                user_card:that.user_card
+              }
+                $.ajax({ 
+                  type:'post', 
+                  url:httpUrl+"/postPublicPull", 
+                  data:JSON.stringify(data), 
+                  // headers:{ "content-type": "application/xml; charset=utf-8"},
+                  headers:{ "content-type": "application/json; charset=UTF-8"},
+                  success:function(res){
+                    console.log(res)
+                    if(res.code == 200){
+                      sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+                      top.location="/userInfo.html";
+                    }else{
+                      alert(res.msg);
+                    }
+                }})
+            }else{
+              alert('请填写身份证号码！');
+            }
+          }
+        }
+    })
+</script>
+
+ -->
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="divport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>用户绑定</title>
+      <style>
+        html,body{
+        background-color: #eee;
+        margin:0;
+        }
+        header{  
+          line-height: 42px; 
+          font-size: 18px; 
+          text-align: center; 
+        }
+        input {
+          display: block;
+          width: 53.33vw;
+          height: 6.66vw;
+          line-height: 6.66vw;
+          font-size: 4vw;
+          /*text-align: right;*/
+          border:none;
+        }
+        .search{
+          width:92vw;
+          padding:0 4vw;
+          height:16vw;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          font-size: 3.73vw;
+          border-bottom:0.26vw solid #ddd;
+          background-color: #fff;
+        }
+        .search input{
+          flex: 1;
+          /* width:500rpx; */
+        }
+        .button{
+         color:#fff;
+         /*width:17.33vw;*/
+         height:8vw;
+         padding: 0 4vw;
+         line-height:8vw;
+         text-align: center;
+         font-size: 4vw;
+         border-radius: 4vw;
+         background-color:#2a9f93;
+        }
+
+
+
+        /* 学生列表 */
+        .dateCelebrityBox{
+          font-size: 3.73vw;
+          color:#666;
+          width:100vw;
+          /* margin: 1.33vw auto; */
+          background-color: #fff;
+        }
+        .dateCelebrity{
+          display: flex;
+          align-items: center;
+          padding:2.66vw 1.33vw;
+          border-bottom:0.4vw solid #ddd;
+        }
+        .dateCelebrity .portrait{
+          width:14vw;
+          height:14vw;
+          margin:0 2.66vw;
+          border-radius: 10%;
+        }
+        .dateCelebrity .infoBox{
+          flex: 1;
+          height:14vw;
+          line-height: 5.33vw;
+
+          display: flex;
+          justify-content: center;
+          align-items: stretch;
+          flex-direction: column;
+        }
+
+        .dateCelebrity .infoBox span{
+          height:6.33vw;
+          line-height:6.33vw;
+
+          display: -webkit-box; 
+          -webkit-box-orient: vertical; 
+          -webkit-line-clamp: 1; 
+          text-overflow: ellipsis; 
+          overflow: hidden;
+        }
+        .dateCelebrity .infoBox .distance{
+          color:#aaa;
+          font-size: 3.73vw;
+        }
+
+
+        /* 暂无数据 */
+        .notData{
+          display: inline-block;
+          width:100%;
+          height:15.66vw;
+          line-height:10.66vw;
+          text-align:center;
+          font-size: 4.66vw;
+          color:#b0b0b0;
+        }
+
+      </style>
+    </head>
+    <body>
+      <div id="wrap">
+          <div class="search">
+            <input type="text" v-model="phoneNum" :value="phoneNum" placeholder='请输入手机号码'></input>
+            <span class="button" @click='search'>检索</span>
+          </div>
+          <span v-if="userList && userList.length == 0" class="notData">无搜索数据,请检查手机号码~</span>
+          <div class="dateCelebrityBox">
+            <div v-for="item,index in userList" data-id="item.stu_number" bindtap='toDetails' class="dateCelebrity" style="border: userList.length == index + 1 ? 'none !important': ''">
+              <!-- <text class="num">{{index + 1}}</text> -->
+              <image mode='aspectFill' class="portrait" mode='aspectFill' :src="item.user_image"></image>
+              <div class="infoBox">
+                <span>{{item.user_name}} {{item.user_sex = 1 ? '男' : item.user_sex = 2 ? '女' : ''}}</span>
+                <span>{{item.user_iphone}}</span>
+                <!-- <span></span> -->
+              </div> 
+              <button class="button" @click='submit(item)'>立即绑定</button>
+            </div>
+          </div>
+
+          <!-- <button @click='submit'>立即绑定</button> -->
+      </div>
+    </body>
+  </html>
+
+<script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+<script type="text/javascript" src="js/vue.min.js"></script>
+<script type="text/javascript">
+var httpUrl = 'https://faceschool.geckowing.com/'
+var wrap = new Vue({
+        el:'#wrap',
+        data:{
+            phoneNum:'',
+            userList:null
+
+        },
+        //用于数据初始化
+        created:function(){
+
+        },
+        methods: {
+          // 手机号查询用户
+          search: function() {
+            let that = this
+            if(this.phoneNum){
+              let data ={iphone:this.phoneNum}
+                $.ajax({ 
+                  type:'get', 
+                  url:httpUrl+"/getIphone", 
+                  data:data, 
+                  headers:{ "content-type": "application/json; charset=UTF-8"},
+                  success:function(res){
+                    console.log(res)
+                    if(res.code == 200){
+                      that.userList = res.data;
+                    }else{
+                      alert(res.msg);
+                    }
+                }})
+            }else{
+              alert('请手机号码！');
+            }
+          },
+          // 绑定
+          submit: function(info) {
+            let that = this
+              let data ={
+                public_openid:sessionStorage.getItem('openId'),
+                user_openid:info.user_openid
+              }
+                $.ajax({ 
+                  type:'post', 
+                  url:httpUrl+"/postPublicPull", 
+                  data:JSON.stringify(data), 
+                  // headers:{ "content-type": "application/xml; charset=utf-8"},
+                  headers:{ "content-type": "application/json; charset=UTF-8"},
+                  success:function(res){
+                    console.log(res)
+                    if(res.code == 200){
+                      sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+                      top.location="/userInfo.html";
+                    }else{
+                      alert(res.msg);
+                    }
+                }})
+            
+          }
+        }
+    })
+</script>

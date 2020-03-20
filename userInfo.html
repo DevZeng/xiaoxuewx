@@ -1,0 +1,204 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="divport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>用户信息</title>
+     <style>
+      html,body{
+        background-color: #fff;
+      }
+      header{  
+        line-height: 42px; 
+        font-size: 18px; 
+        text-align: center; 
+      }
+
+      button {
+        width: 60vw;
+        height: 9.33vw;
+        line-height: 9.33vw;
+        margin: 13.33vw auto 6.66vw auto;
+        color: #fff;
+        background-color: #DC4D41;
+        border-radius: 6.66vw;
+        font-size: 4.66vw;
+      }
+
+      button::after {
+        border: none;
+      }
+
+      img{
+        object-fit: cover;
+      }
+      .list {
+        padding: 0 0 5.33vw 5.33vw;
+        background-color: #fff;
+      }
+
+      .tabledivcell {
+        width:90vw;
+        position: relative;
+        padding: 3.33vw 5.33vw 3.33vw 0;
+        border-bottom: 0.26vw solid #dcdcdc;
+        background-color: #fff;
+        color: #666;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 4.66vw;
+      }
+
+      .tabledivcell .box2 {
+        width: 49.33vw;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-start;
+      }
+
+      .tabledivcell span {
+        width: 53.33vw;
+        font-size: 4.26vw;
+        margin-left: 1.53vw;
+        white-space : nowrap;
+      }
+
+      .tabledivcell .box1 {
+        display: flex;
+        align-items: center;
+      }
+
+      .tabledivcell .input {
+        display: block;
+        width: 53.33vw;
+        height: 6.66vw;
+        line-height: 6.66vw;
+        font-size: 4vw;
+        text-align: right;
+      }
+
+      .tabledivcell div {
+        width: 53.33vw;
+        text-align: right;
+      }
+
+      .tabledivcell .left-icon {
+        width: 5.33vw;
+        min-width:5.33vw;
+        height: 5.33vw;
+        min-height:5.33vw;
+        object-fit: cover;
+      }
+
+      .tabledivcell .right-icon {
+        width: 6.66vw;
+        height: 6.66vw;
+      }
+      .portrait{
+        width:16vw;
+        height:16vw;
+      }
+
+      .btnBox{
+        text-align: center; 
+      }
+
+      </style>
+    </head>
+    <body>
+      <div id="wrap">
+
+        <div class="list">
+          <div class="tabledivcell" style="justify-content: flex-start;">
+            <img class="portrait" :src="u_info.user_image" />
+            <span>{{u_info.user_alias}}</span>
+          </div>
+
+          <div class="tabledivcell">
+            <img class="left-icon" src="/icon/my1.png" />
+            <span>姓名</span>
+            <span class="input">{{u_info.user_name}}</span>
+          </div>
+          <div class="tabledivcell">
+            <img class="left-icon" src="/icon/sex1.png" />
+            <span>性别</span>
+            <span class="input">{{u_info.user_sex== 1?'男':'女'}}</span>
+          </div>
+          <div class="tabledivcell">
+            <img class="left-icon" src="/icon/iphone.png" />
+            <span>手机</span>
+            <span class="input">{{u_info.user_iphone}}</span>
+          </div>
+          <div class="tabledivcell">
+            <img class="left-icon" src="/icon/ID.png" />
+            <span>身份证</span>
+            <span class="input">{{u_info.user_card}}</span>
+          </div>
+        </div>
+        <div class="btnBox">
+          <button @click='submit'>解除绑定</button>
+        </div>
+      </div>
+    </body>
+  </html>
+
+<script type="text/javascript" src="js/jquery-3.1.0.min.js"></script>
+<script type="text/javascript" src="js/vue.min.js"></script>
+<script type="text/javascript">
+var httpUrl = 'https://faceschool.geckowing.com/'
+var wrap = new Vue({
+        el:'#wrap',
+        data:{
+            u_info:{},
+        },
+        //用于数据初始化
+        created:function(){
+          var userInfo = sessionStorage.getItem('userInfo');
+         if(userInfo){
+          this.u_info = JSON.parse(userInfo)
+         }else{
+          this.GetUserInfo();
+         }
+        },
+        methods: {
+          //获取用户信息
+          GetUserInfo: function() {
+            let that = this
+                $.ajax({ 
+                  type:'get', 
+                  url:httpUrl+"/getUser", 
+                  data:{public_openid: openId}, 
+                  success:function(res){
+                    if(res.data){//已绑定小程序用户
+                      sessionStorage.setItem("userInfo", JSON.stringify(res.data));
+                      this.u_info = res.data;
+                    }else{//未绑定小程序用户
+                      top.location="/userBinding.html";
+                    }
+                }})
+            },
+            // 解除绑定
+          submit: function() {
+            let that = this
+            console.log(that.u_info)
+                $.ajax({ 
+                  type:'delete', 
+                  url:httpUrl+"delPublicUser/" + sessionStorage.getItem('openId'), 
+                  // headers:{ "content-type": "application/json; charset=UTF-8"},
+                  success:function(res){
+                    console.log(res)
+                    if(res.code == 200){
+                      sessionStorage.setItem("userInfo", '');
+                      top.location="/release.html";
+                      // window.open("/release.html");
+                    }else{
+                      alert(res.msg);
+                    }
+                }})
+            
+          }
+        }
+    })
+</script>
