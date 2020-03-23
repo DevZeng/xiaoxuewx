@@ -37,6 +37,7 @@ var wrap = new Vue({
         //用于数据初始化
         created:function(){
           code = this.GetQueryString("code");//获取url参数
+          alert(code);
           this.GetOpenId();
         },
         methods: {
